@@ -4,11 +4,14 @@ if (!is_numeric($_GET['id'])) {
     header("Location: index.php");    
 }
 $idNews = $_GET['id'];
-$DBC = mysql_connect("localhost", "root", "");
-mysql_select_db("creative");
-$donneesSQL = mysql_query("SELECT content, title, DATE_FORMAT( n.timestamp1, '%d/%m/%Y | %H:%i' ) AS timestamp1, intro, MEMBER_id, nick FROM news AS n, member AS m WHERE n.id=$idNews");
-mysql_close($DBC);
-$donnees = mysql_fetch_array($donneesSQL);
+
+
+include 'includes/SQL.php';
+$connection = openSQLConnexion();
+$donneesSQL = select($connection,"SELECT content, title, DATE_FORMAT( n.created, '%d/%m/%Y | %H:%i' ) AS created, intro, MEMBER_id, nick FROM news AS n, member AS m WHERE n.id=?",array($idNews));
+closeSQLConnexion($connection);
+$donnees=$donneesSQL[0];
+$donneesSQL=null;
 ?>
 <div id="news">
         <article>
@@ -21,7 +24,7 @@ $donnees = mysql_fetch_array($donneesSQL);
                 ?>
             </div>
             <div class="bottomnews">
-                <div  class="bottomnewsleft">Auteur : <a href="?page=member&id=<?php echo $donnees['MEMBER_id']; ?>"><?php echo $donnees['nick']; ?></a></div><div class="bottomnewsright">date : <?php echo $donnees['timestamp1']; ?></div>
+                <div  class="bottomnewsleft">Auteur : <a href="?page=member&id=<?php echo $donnees['MEMBER_id']; ?>"><?php echo $donnees['nick']; ?></a></div><div class="bottomnewsright">date : <?php echo $donnees['created']; ?></div>
             </div>
         </article>
 </div>

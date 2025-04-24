@@ -1,12 +1,13 @@
 <?php
 require_once 'gameq/GameQ.php';
-$DBC = mysql_connect("localhost", "root", "");
-mysql_select_db("creative");
-$donneesSQL = mysql_query("SELECT IP, port FROM server WHERE TYPE_SERVER_id=1 ORDER BY number");
-mysql_close($DBC);
+
+include 'includes/SQL.php';
+$connection = openSQLConnexion();
+$donneesSQL = select($connection,"SELECT IP, port FROM server WHERE TYPE_SERVER_id=1 ORDER BY number");
+closeSQLConnexion($connection);
 
 $i = 1;
-while ($donnees = mysql_fetch_array($donneesSQL)) {
+foreach ($donneesSQL as $donnees) {
     $servers['server' . $i] = array('cs', $donnees['IP'], $donnees['port']);
     $i++;
 }
@@ -21,14 +22,18 @@ $results = $gq->requestData();
         <ul>            
             <?php
             if (isset($_SESSION['LU'])) {
-                echo "<li><a href='#'>FFA</a></li>
+                ?>
+            <li><a href='#'>FFA</a></li>
                <li><a href='#'>TS</a></li>
             <li><a href='#'>HLTV</a></li>
             <li><a href='#'>WAR</a></li>
-            <li id='last'><a href='#'>COTISATION</a></li>";
+            <li id='last'><a href='#'>COTISATION</a></li>
+            <?php
             }
-            else {
-                echo "<li id='last'><a href='#'>FFA</a></li>";
+            else {                
+                ?>
+            <li id='last'><a href='#'>FFA</a></li>
+                <?php
             }
             ?>
             
@@ -37,28 +42,40 @@ $results = $gq->requestData();
     <br />
     <?php
     foreach ($results as $id => $data) {
-        echo "<div class='server'>
-            " . $data['hostname'] . "<br />
-        IP : " . $data['gq_address'] . ":" . $data['gq_port'] . "<br />
-        Map : " . $data['map'] . "<br />
-        Prochaine Map : " . $data['amx_nextmap'] . "<br />
-        Temps : ";
+        ?>
+    <div class='server'>
+            <?php echo $data['hostname']; ?><br />
+        IP : <?php echo $data['gq_address']; ?>:<?php echo $data['gq_port']; ?><br />
+        Map : <?php echo $data['map']; ?><br />
+        Prochaine Map : <?php echo $data['amx_nextmap']; ?><br />
+        Temps :
+        <?php
         if ($data['amx_timeleft'] != '00:00') {
-            echo $data['amx_timeleft'] . "/" . $data['mp_timelimit'] . "<br />";
+            ?>
+            <?php echo $data['amx_timeleft']; ?>/<?php echo $data['mp_timelimit']; ?><br />
+            <?php
         } else {
-            echo "illimité<br />";
+            ?>
+            illimité<br />
+            <?php
         }
-        echo "Joueurs : " . $data['num_players'] . "/" . $data['max_players'] . "<br />
-        <div  class='serversPlayers'>";
+        ?>
+        Joueurs : <?php echo $data['num_players']; ?>/<?php echo $data['max_players']; ?><br />
+        <div  class='serversPlayers'>
+            <?php
         if ($data['num_players'] > 0) {
             foreach ($data['players'] as $player) {
-                $time = date('H:i:s', $player['time']);
-                echo $player['name'] . ' | ' . $player['score'] . ' | ' . $time . '<br />';
+                $time = date('H:i:s', $player['time']);                
+                echo $player['name'] . ' | ' . $player['score'] . ' | ' . $time . '<br />';                
             }
         } else {
-            echo "aucun joueur en ligne";
+            ?>
+            aucun joueur en ligne
+            <?php
         }
-        echo "</div><a href = 'steam://connect/" . $data['gq_address'] . ":" . $data['gq_port'] . "'>Rejoindre</a></div>";
+        ?>
+        </div><a href = 'steam://connect/<?php echo $data['gq_address']; ?>:<?php echo $data['gq_port']; ?>'>Rejoindre</a></div>
+        <?php
     }
     ?>
 </div>

@@ -1,39 +1,57 @@
 <?php
-
 if (isset($_SESSION['pseudo'])) {
-$DBC = mysql_connect("localhost", "root", "");
-mysql_select_db("creative");
-$donneesSQL = mysql_query("SELECT DATE_FORMAT( birthday, '%d/%m/%Y' ) AS birthday, steamFriend, country, department, town FROM member WHERE nick='".$_SESSION['pseudo']."'");
-mysql_close($DBC);
-$donnees = mysql_fetch_array($donneesSQL);
+    include 'includes/SQL.php';
+    $connection = openSQLConnexion();
+    $donneesSQL = select($connection, "SELECT DATE_FORMAT( birthday, '%d/%m/%Y' ) AS birthday, steamFriend, country, department, town FROM member WHERE nick=?", array($_SESSION['pseudo']));
+    closeSQLConnexion($connection);
+    $donnees = $donneesSQL[0];
+    $donneesSQL = null;
     ?>
 
-        <div id="recruit">
+    <div id="recruit">
         <form action="?page=work" method="post">
             <?php
             if (empty($donnees['birthday']) || empty($donnees['steamFriend'])) {
-               echo "<fieldset><legend>Complément(s) fiche membre obligatoires : </legend><div>";
-               if(empty($donnees['birthday'])){
-                   echo "<label for='birth'>Date de naissance :</label><input type='text' name='birthday' id='birth' size='1' maxlength='2' value='' /> / <input type='text' name='birthmonth' size='1' maxlength='2' value=''' /> / <input type='text' name='birthyear' size='2' maxlength='4' value='' /><br />";
-               }
-               if( empty($donnees['steamFriend'])){
-                   echo "<label for='steamFriend'>Steam AMIS :</label><input type='text' size='66' maxlength='45' name='steamFriend' id='steamFriend' value='' />";
-               }
-                echo"</div></fieldset>"; 
+                ?>
+                <fieldset><legend>Complément(s) fiche membre obligatoires : </legend><div>
+                        <?php
+                        if (empty($donnees['birthday'])) {
+                            ?>
+                            <label for='birth'>Date de naissance :</label><input type='text' name='birthday' id='birth' size='1' maxlength='2' value='' /> / <input type='text' name='birthmonth' size='1' maxlength='2' value=''' /> / <input type='text' name='birthyear' size='2' maxlength='4' value='' /><br />
+                            <?php
+                        }
+                        if (empty($donnees['steamFriend'])) {
+                            ?>
+                            <label for='steamFriend'>Steam AMIS :</label><input type='text' size='66' maxlength='45' name='steamFriend' id='steamFriend' value='' />
+                            <?php
+                        }
+                        ?>
+                        echo"</div></fieldset>
+                <?php
             }
             if (empty($donnees['country']) || empty($donnees['department']) || empty($donnees['town'])) {
-               echo "<fieldset><legend>Complément(s) fiche membre optionnels : </legend><div>";
-               if(empty($donnees['country'])){
-                   echo "<label for='country'>Pays :</label><input type='text' size='45' maxlength='30' name='country' id='country' value='' />";
-               }
-               if(empty($donnees['department'])){
-                   echo "<label for='department'>Département :</label><input type='text' size='45' maxlength='30' name='department' id='department' value='' />";
-               }
-               if(empty($donnees['town'])){
-                   echo "<label for='town'>Ville :</label><input type='text' size='45' maxlength='30' name='town' id='' value='' />";
-               }
-                echo"</div></fieldset>"; 
-            }            
+                ?>
+                <fieldset><legend>Complément(s) fiche membre optionnels : </legend><div>
+                        <?php
+                        if (empty($donnees['country'])) {
+                            ?>
+                            <label for='country'>Pays :</label><input type='text' size='45' maxlength='30' name='country' id='country' value='' />
+                            <?php
+                        }
+                        if (empty($donnees['department'])) {
+                            ?>
+                            <label for='department'>Département :</label><input type='text' size='45' maxlength='30' name='department' id='department' value='' />
+                            <?php
+                        }
+                        if (empty($donnees['town'])) {
+                            ?>
+                            <label for='town'>Ville :</label><input type='text' size='45' maxlength='30' name='town' id='' value='' />
+                            <?php
+                        }
+                        ?>
+                        </div></fieldset>
+                <?php
+            }
             ?>        
             <fieldset>
                 <legend>Informations obligatoires :</legend>
@@ -43,7 +61,7 @@ $donnees = mysql_fetch_array($donneesSQL);
                     </select><br />
                     <label for="steamID">Steam ID :</label><input type="text" size="66" maxlength="45" name="steamID" id="steamID" value="" />
                     <label for="nick">pseudo en jeu :</label><input type="text" size="45" maxlength="30" name="nick" id="nick" value="" />
-                     <label for="xp">Expérience :</label><input type="text" name="xp" id="xp" size="1" maxlength="2"/> année(s)<br />
+                    <label for="xp">Expérience :</label><input type="text" name="xp" id="xp" size="1" maxlength="2"/> année(s)<br />
                     <label for="level">Niveau :</label><select name="level" id="level">
                         <option value="1">j'en sais rien</option>
                         <option value="2" selected="selected">noob</option>
@@ -97,8 +115,8 @@ $donnees = mysql_fetch_array($donneesSQL);
                             <option value="5">5| MAGNUM SNIPER RIFLE (awp)</option>
                             <option value="6">6| D3/AU-1 (snipe auto)</option>
                         </select>
-                        </fieldset>
-                        <fieldset>
+                    </fieldset>
+                    <fieldset>
                         <legend>Arme de prédilection en counter-terroriste:</legend>
                         <label for="CTPistol">pistolet :</label><select name="CTPistol" id="CTPistol">
                             <option value="0"></option>
@@ -127,7 +145,7 @@ $donnees = mysql_fetch_array($donneesSQL);
                         <option value="5">irc</option>
                     </select><br />
                     <label for="other">Autre(s) :</label><textarea name="other" id="other" cols="30" rows="5"></textarea>
-                   </div>
+                </div>
             </fieldset>
             <input type="hidden" name="action" value="recruit" />
             <input type="submit" value="Envoyer" />
@@ -135,6 +153,14 @@ $donnees = mysql_fetch_array($donneesSQL);
     </div>
     <?php
 } else {
-    echo "<br /><br />Vous devez être inscrit pour pouvoir effectuer une demande de recrutement.<br /><br />Veuillez vous connecter à votre compte ou si cela n'est pas encore fait, vous enregister.<br /><br /><br />";
+    ?>
+    <br />
+    <br />
+    Vous devez être inscrit pour pouvoir effectuer une demande de recrutement.<br />
+    <br />
+    Veuillez vous connecter à votre compte ou si cela n'est pas encore fait, vous enregister.<br />
+    <br />
+    <br />
+    <?php
 }
 ?>

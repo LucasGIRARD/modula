@@ -14,12 +14,10 @@ $firstLimit = ($idPageNews - 1) * $newsPerPage;
 
 include 'includes/SQL.php';
 $connection = openSQLConnexion();
-$totalNews = select($connection,"SELECT COUNT(*) AS nbNews FROM news",array(array()));
+$totalNews = select($connection,"SELECT COUNT(*) AS nbNews FROM news");
 $nbPages = ceil($totalNews[0]['nbNews'] / $newsPerPage);
-$donneesSQL = select($connection,"SELECT n.id, content, title, DATE_FORMAT( n.created, '%d/%m/%Y | %H:%i' ) AS timestamp1, intro, MEMBER_id, nick FROM news AS n LEFT JOIN member AS m ON (MEMBER_id = m.id) ORDER BY n.id DESC LIMIT  $firstLimit, $newsPerPage",array(array()));
+$donneesSQL = select($connection,"SELECT n.id, content, title, DATE_FORMAT( n.created, '%d/%m/%Y | %H:%i' ) AS timestamp1, intro, MEMBER_id, nick FROM news AS n LEFT JOIN member AS m ON (MEMBER_id = m.id) ORDER BY n.id DESC LIMIT  $firstLimit, $newsPerPage");
 closeSQLConnexion($connection);
-
-
 ?>
 <div id="news">
 <?php
@@ -33,7 +31,9 @@ foreach ($donneesSQL as $donnees) {
     <?php
     echo $donnees['intro'];
     if (!empty($donnees['content'])) {
-        echo "<div class='Readmore'><a href='?page=fullNews&id=" . $donnees['id'] . "'>Lire la suite...</a></div>";
+        ?>
+        <div class='Readmore'><a href='?page=fullNews&id=<?php echo $donnees['id']; ?>'>Lire la suite...</a></div>
+        <?php
     }
     ?>
             </div>
@@ -47,9 +47,13 @@ foreach ($donneesSQL as $donnees) {
     <div class="navnews">
     <?php
     if ($nbPages > 1) {
-        echo 'Page : ';
+        ?>
+        Page : 
+            <?php
         for ($i = 1; $i <= $nbPages; $i++) {
-            echo '<a href="?page=news&id=' . $i . '">' . $i . '</a> ';
+            ?>
+        <a href="?page=news&id=<?php echo $i; ?>"><?php echo $i; ?></a>
+            <?php
         }
     }
     ?>
