@@ -1,15 +1,13 @@
-#--------------------------------------------------
-# Répertoire : /cms2/
-#--------------------------------------------------
+SetEnv PHP_VER 5_4
+SetEnv REGISTER_GLOBALS 0
 
-# Le serveur doit suivre les liens symboliques :
-#Options +FollowSymlinks
+AddDefaultCharset UTF-8
 
-# Activation du module de réécriture d'URL :
-#RewriteEngine on
+IndexIgnore *
 
-#--------------------------------------------------
-# Règles de réécriture d'URL :
-#--------------------------------------------------
+<IfModule mod_rewrite.c>
 
-#RewriteRule ^page/([0-9]+)/?$ /cms2/index.php?page=$1 [NC,L] # Handle page requests
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^lucas-girard\.fr$ [NC]
+RewriteRule ^(.*)$ http://www.lucas-girard.fr/$1 [R=301,L]
+</IfModule>

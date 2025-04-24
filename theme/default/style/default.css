@@ -268,11 +268,11 @@ article {
 
 /* Menu */
 
-#mainMenu {
+nav {
 
 }
 
-#mainMenu ul {
+nav ul {
     margin: 0px;
     padding: 0px;
     list-style-type: none;
@@ -283,7 +283,7 @@ article {
     word-spacing: -1px;
 }
 
-#mainMenu li {
+nav li {
     display:inline-block;
     font-size: 18px;
     letter-spacing: normal;
@@ -300,19 +300,19 @@ article {
     background:url("../image/menu.png") repeat-x top right;   
 }
 
-#mainMenu li:last-child {
+nav li:last-child {
     border-right: 2px solid #BFBFB7;
 }
 
-#mainMenu li a:hover {
+nav li a:hover {
     color: #FF8027;
 }
 
-#mainMenu li:hover {
+nav li:hover {
     background-color:#FFFFFF;
 }
 
-#mainMenu li a {
+nav li a {
     text-decoration:none;
     color:#000000;
     margin: 0px;
