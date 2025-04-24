@@ -1,31 +1,28 @@
 <?php
 
 function openSQLConnexion() {
-    //$host = 'mysql:host=mysql51-31.perso;dbname=lucasgirmysql';
-    //$user = 'lucasgirmysql';
-    //$password = '0DtRh3Ib';
-    $host = 'mysql:host=localhost;dbname=cms';
+	$host = 'mysql:host=localhost;dbname=cms';
     $user = 'root';
-    $password = '';
+    $password = 'mysql';
     $option = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8", PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
     try {
         $connection = new PDO($host, $user, $password, $option);
-        $connection->query('SET lc_time_names="fr_FR"');        
+        $connection->query('SET lc_time_names="fr_FR"');
     } catch (PDOException $e) {
         echo 'ERROR: ' . $e->getMessage();
     }
     return $connection;
 }
 
-function closeSQLConnexion() {    
-    unset($GLOBALS['connection']);
+function closeSQLConnexion($connection) {
+    $connection = null;
 }
 
 function insertUpdate($connection, $query, $tabVars, $count = false) {
     if (!$count) {
         try {
             $resultat = $connection->prepare($query);
-            foreach ($tabVars as $vars) {                
+            foreach ($tabVars as $vars) {
                return $resultat->execute($vars);
             }
         } catch (PDOException $e) {
@@ -61,13 +58,4 @@ function select($connection, $query, $vars = null) {
         echo 'ERROR: ' . $e->getMessage();
     }
 }
-
-function getLastId(&$connection) {    
-    try {        
-        return $connection->lastInsertId();
-    } catch (PDOException $e) {
-        echo 'ERROR: ' . $e->getMessage();
-    }
-}
-
 ?>

@@ -1,0 +1,555 @@
+/* General */
+body {
+    background-color: black;
+    min-width:1000px;
+}
+
+strong {
+    font-weight:bold;
+}
+
+em {
+    font-style:italic
+}
+
+strike {
+    text-decoration: line-through;
+}
+
+u {
+    text-decoration:underline;
+}
+
+p {
+    margin: 0px;
+}
+/* END General */
+/* Header */
+header {
+    text-align: center;
+    background-color: #232323;
+}
+
+
+/* END Header */
+/* Menu */
+#menu ul {
+    margin: 0px;
+    padding: 0px 5px;
+    list-style-type: none;
+    text-align: center;
+
+    font-size: 1px;
+    letter-spacing: -1px;
+    word-spacing: -1px;
+
+    background:url("../image/menu.png") repeat-x top right;
+}
+
+#menu li {
+    display:inline-block;
+    margin: 0px;
+    padding: 0px;
+    padding-left: 3px;
+    padding-right: 5px;
+    outline: 0px;
+    border-left: 2px solid #ff6000;
+    background:url("../image/menu.png") repeat-x top right;
+    font-size: 18px;
+    letter-spacing: normal;
+    word-spacing: normal;
+}
+
+#menu ul #last {
+    border-right: 2px solid #ff6000;
+}
+
+#menu li:hover {
+    background-color:#ff6000;
+}
+
+#menu {
+    font-family:MV boli;
+    border-top: 1px solid #ff6000;
+    border-bottom: 1px solid #ff6000;
+
+}
+
+#menu a {
+    text-decoration:none;
+    color:#ffffff;
+    margin: 0px;
+    padding: 0px;
+    outline: 0px;
+
+}
+
+/* END Menu */
+/* SubMenu */
+#submenu ul {
+    font-size: 1px;
+    letter-spacing: -1px;
+    word-spacing: -1px;
+    margin: 0px;
+    padding: 0px 5px;
+    list-style-type: none;
+
+    text-align: center;
+}
+
+#submenu li {
+    letter-spacing: normal;
+    word-spacing: normal;
+    display:inline-block;
+    outline: 0px;
+
+    margin: 0px;
+    padding: 0px;
+    padding-left: 3px;
+    padding-right: 5px;
+    border-left: 2px solid #ff6000;
+    background:url("../image/menu.png") repeat-x top right;
+    font-size: 18px;
+    border-top: 1px solid #ff6000;
+    border-bottom: 1px solid #ff6000;
+}
+
+#submenu ul #last {
+    border-right: 2px solid #ff6000;
+}
+
+#submenu li:hover {
+    background-color:#ff6000;
+}
+
+#submenu {
+    font-family:MV boli;
+    margin-top: 5px;
+}
+
+#submenu a {
+    text-decoration:none;
+    color:#ffffff;
+    margin: 0px;
+    padding: 0px;
+    outline: 0px;
+
+}
+
+/* END SubMenu */
+
+#content {
+    margin: 5px;
+}
+
+
+/* News */
+
+
+.icone {
+    border: 2px silver solid;
+    border-radius: 5px;
+    margin-right: 5px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+h2 {
+
+    display: inline-block;
+    margin: 0px;
+    vertical-align: middle;
+    display: inline-block;
+    font-family: MV boli;
+}
+
+.topnews {
+    text-align: left;
+    padding : 5px;
+    color: #ffffff;
+    border-bottom: 2px solid #ff6000;
+}
+
+.bodynews {
+    padding: 10px 5px;
+    background-color: grey;
+    text-align:center;
+}
+
+.Readmore{
+    text-align: right;
+}
+
+.bottomnews {
+    border-top: 2px solid #ff6000;
+    padding: 2px 5px;
+    color: #ffffff;
+}
+
+.bottomnewsright {
+    display: inline-block;
+    text-align: right;
+    width: 50%;
+}
+
+.bottomnewsleft {
+    text-align: left;
+    display: inline-block;
+    width: 50%;
+}
+
+article {
+    margin-top: 10px;
+    border: 2px solid #ff6000;
+    border-radius: 5px;
+    background-color: #232323;
+}
+
+.navnews {
+    margin: 10px 0px;
+    color: #ff6000;
+    text-align: center;
+}
+/* END News */
+/* Bottom */
+footer {
+    border-top: 2px solid #ff6000;
+    background-color: #232323;
+}
+/* END Bottom */
+/* TEST */
+#body {
+    border: 2px solid #ff6000;
+    background-color: grey;
+}
+/* END TEST */
+
+/*{
+       margin: 0px;
+       padding: 0px 5px;
+       list-style-type: none;
+       text-align: center;
+
+       font-size: 1px;
+       letter-spacing: -1px;
+       word-spacing: -1px;
+
+       background:url("../image/menu.png") repeat-x top right;
+}*/
+
+.server {
+    display:inline-block;
+    margin: 0px;
+    padding: 0px;
+    padding-left: 3px;
+    padding-right: 5px;
+    outline: 0px;
+
+    letter-spacing: normal;
+    word-spacing: normal;
+}
+
+#members , #servers {
+    text-align: center;
+}
+
+
+#members .lineup ul {
+    font-size: 1px;
+    letter-spacing: -1px;
+    word-spacing: -1px;
+    list-style-type: none;
+    padding: 0px;
+    margin:0px;
+}
+
+#members .lineup li {
+    margin:0px;
+    margin-bottom: 10px;
+    margin-right:-1px;
+    padding: 2px 5px;
+    border: 1px solid black;
+    display: inline-block;
+    outline: 0px;
+    font-size: 16px;
+    letter-spacing: normal;
+    word-spacing: normal;
+}
+
+.lineup table {
+    margin: auto;
+    border-collapse: collapse;
+}
+
+.lineup table td {
+    border: 1px solid black;
+}
+
+.dispo {
+    background-color: greenyellow;
+}
+
+.adispo {
+    background-color: orange;
+}
+
+.ndispo {
+    background-color: red;
+}
+
+.serversPlayers {
+    background-color: white;
+    overflow-y: auto;
+    min-height:20px;
+    max-height:100px;
+    width:170px;
+    text-align: left;
+    margin: auto; 
+    padding-left: 2px;
+}
+
+.server{
+    vertical-align: top;
+}
+
+/* RECRUIT */
+
+#recruit {
+    text-align: center;
+}
+
+#recruit ol{
+    width: 350px;
+    text-align: left;
+    margin: auto;
+}
+
+#recruit table {
+    margin: auto;
+    border-collapse: collapse;
+}
+
+#recruit table td {
+    border:1px solid black;
+    font-size: 12px;
+}
+
+#recruit table th {
+    border:2px solid black;
+    font-weight: normal;
+    font-size: 12px;
+}
+
+#recruit table .border2 {
+    border:2px solid black;
+}
+
+#recruit table .noborder {
+    border:0px;
+}
+
+#content {
+    text-align: center;
+}
+/* END RECRUIT */
+/* UNCONNECT BUTTON LINK */
+
+#unconnectButton{
+    font-family: MV boli;
+    cursor : pointer;
+    color:#ffffff;
+    margin: 0px;
+    padding: 0px;
+    outline: 0px;
+    background:url("../image/menu.png") repeat-x top right;
+    font-size: 18px;
+    border: none;
+}
+
+/* END UNCONNECT BUTTON LINK */
+.delimitForm {
+    font-style: italic;
+    text-decoration: underline;
+    position: relative;
+    right: 210px;
+}
+
+#register fieldset div {
+    width:560px;
+    margin: auto;
+    text-align: left;
+}
+
+#register fieldset div label {
+    display: inline-block;
+    vertical-align: top;
+    width: 135px;
+    height: 30px;
+}
+
+#recruit fieldset div {
+    width:730px;
+    margin: auto;
+    text-align: left;
+}
+
+#recruit fieldset div label {
+    display: inline-block;
+    vertical-align: top;
+    width: 305px;
+    height: 30px;
+}
+
+#connect fieldset div {
+    width:560px;
+    margin: auto;
+    text-align: left;
+}
+
+#connect fieldset div label {
+    display: inline-block;
+    vertical-align: top;
+    width: 135px;
+    height: 30px;
+}
+
+#member {
+    width:730px;
+    margin: auto;
+    text-align: left;
+}
+
+#member .key {
+    display: inline-block;
+    font-weight:bold;
+    width: 150px;
+}
+
+#match table {
+    margin: auto;
+    border-collapse: collapse;
+}
+
+#match table td {
+    border: 1px solid black;
+}
+
+.map {
+    border : 1px solid black;
+    display:inline-block;
+    margin: 0px;
+    padding: 0px;
+    padding-left: 3px;
+    padding-right: 5px;
+    outline: 0px;
+
+    letter-spacing: normal;
+    word-spacing: normal;
+}
+
+#account div {
+    width:730px;
+    margin: auto;
+    text-align: left;
+}
+
+#account div label {
+    display: inline-block;
+    vertical-align: top;
+    width: 305px;
+    height: 30px;
+}
+
+#contact div {
+    width:560px;
+    margin: auto;
+    text-align: left;
+}
+
+#contact div label {
+    display: inline-block;
+    vertical-align: top;
+    width: 135px;
+    height: 30px;
+}
+
+#away div {
+    width:560px;
+    margin: auto;
+    text-align: left;
+}
+
+#away div label {
+    display: inline-block;
+    vertical-align: top;
+    width: 135px;
+    height: 30px;
+}
+
+#buttonLink{    
+    cursor : pointer;    
+    text-decoration: underline;
+    margin: 0px;
+    padding: 0px;
+    outline: 0px;    
+    font-size: 14px;
+    border: none;
+    background-color: grey;
+}
+
+#recruit table {
+    margin: auto;
+    border-collapse: collapse;
+}
+
+#recruit table td {
+    border:1px solid black;
+    font-size: 12px;
+    background-color: red;
+    padding: 0px;
+    width: 17px;
+}
+
+#recruit table th {
+    border:2px solid black;
+    font-weight: normal;
+    font-size: 12px;
+}
+
+#recruit table .border2 {
+    border:2px solid black;
+    background-color: inherit;
+}
+
+#recruit table .noborder {
+    border:0px;
+}
+
+
+#account table {
+    margin: auto;
+    border-collapse: collapse;
+}
+
+#account table td {
+    border:1px solid black;
+    font-size: 12px;
+    background-color: red;
+    padding: 0px;
+    width: 17px;
+}
+
+#account table th {
+    border:2px solid black;
+    font-weight: normal;
+    font-size: 12px;
+}
+
+#account table .border2 {
+    border:2px solid black;
+    background-color: inherit;
+}
+
+#account table .noborder {
+    border:0px;
+}
