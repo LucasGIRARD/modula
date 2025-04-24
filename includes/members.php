@@ -11,14 +11,13 @@ if (isset($_GET['id'])) {
 }
 $memberPerPage = 100;
 $firstLimit = ($idPageMember - 1) * $memberPerPage;
-$DBC = mysql_connect("localhost", "root", "");
-mysql_select_db("creative");
-$donneesSQL = mysql_query("SELECT COUNT(*) AS nbMember FROM member");
-$donnees = mysql_fetch_array($donneesSQL);
-$totalMember = $donnees['nbMember'];
-$nbPages = ceil($totalMember / $memberPerPage);
-$donneesSQL = mysql_query("SELECT id, nick FROM member AS m ORDER BY m.id DESC LIMIT  $firstLimit, $memberPerPage");
-mysql_close($DBC);
+
+include 'includes/SQL.php';
+$connection = openSQLConnexion();
+$totalMember = select($connection,"SELECT COUNT(*) AS nbMember FROM member");
+$nbPages = ceil($totalMember[0]['nbMember'] / $memberPerPage);
+$donneesSQL = select($connection,"SELECT id, nick FROM member AS m ORDER BY m.id DESC LIMIT  $firstLimit, $memberPerPage");
+closeSQLConnexion($connection);
 ?>
 <div id="members">
     <nav id="submenu">
@@ -31,7 +30,7 @@ mysql_close($DBC);
     <div class="lineup">
         <ul>
             <?php
-            while ($donnees = mysql_fetch_array($donneesSQL)) {
+            foreach ($donneesSQL as $donnees) {
                 echo '<li><a href="?page=member&id=' . $donnees['id'] . '">' . $donnees['nick'] . '</a></li>';
             }
             ?>

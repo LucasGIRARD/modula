@@ -18,7 +18,7 @@ if (isset($_GET['page'])) {
     <head>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="styles/style.css" />
-        <title>Tigers Gamerz</title>
+        <title>CV - informaticien - analyste-développeur - Lucas Girard</title>
     </head>
     <body>
         <div id="body">

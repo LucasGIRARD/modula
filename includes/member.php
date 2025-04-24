@@ -11,12 +11,13 @@ if (isset($_GET['id'])) {
     header("HTTP/1.0 404 Not Found");
     header("Location: index.php");
 }
-$DBC = mysql_connect("localhost", "root", "");
-mysql_select_db("creative");
-$donneesSQL = mysql_query("SELECT DATE_FORMAT( timestamp1, '%d/%m/%Y | %H:%i' ) AS timestamp1, firstName, lastName,DATE_FORMAT( birthday, '%d/%m/%Y' ) AS birthday, gender, country, department, town, email, steamFriend, nick FROM member WHERE id=" . $idMember);
-mysql_close($DBC);
-$donnees = mysql_fetch_array($donneesSQL);
-if ($donnees['gender'] = "m"){
+include 'includes/SQL.php';
+$connection = openSQLConnexion();
+$donneesSQL = select($connection,"SELECT DATE_FORMAT(created, '%d/%m/%Y | %H:%i' ) AS created, firstName, lastName,DATE_FORMAT( birthday, '%d/%m/%Y' ) AS birthday, gender, country, department, town, email, steamFriend, nick FROM member WHERE id=?",array($idMember));
+closeSQLConnexion($connection);
+$donnees=$donneesSQL[0];
+$donneesSQL=null;
+if ($donnees['gender'] == "m"){
     $gender = "Homme";
 }
  else {
@@ -33,5 +34,5 @@ echo "<div id='member'>
 <span class='key'>Ville : </span>" . $donnees['town'] . "<br />
 <span class='key'>email : </span>" . $donnees['email'] . "<br />
 <span class='key'>Steam Amis : </span>" . $donnees['steamFriend'] . "<br />
-<span class='key'>date d'inscription : </span>" . $donnees['timestamp1'] . "</div>";
+<span class='key'>date d'inscription : </span>" . $donnees['created'] . "</div>";
 ?>

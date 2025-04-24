@@ -14,24 +14,13 @@ switch ($_POST['action']) {
             } elseif (empty($_POST['pass'])) {
                 $message = "le champ password n'a pas été remplie !";
             } else {
-                $host = 'mysql:host=localhost;dbname=creative';
-                $user = 'root';
-                $password = '';
-                $option = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8");
-                $connection = new PDO($host, $user, $password, $option);
-
-// Préparation de notre requête
-                if (!$resultats = $connection->prepare("SELECT id, LINEUP_id FROM member AS m LEFT JOIN member_lineup ON ( m.id = MEMBER_id ) WHERE nick=? AND password=?")) {
-                    list($pdoCode, $internalCode, $msg) = $connection->errorInfo();
-                    die(sprintf("La préparation de la requête a échoué : %d/%d, %s", $pdoCode, $internalCode, $msg));
-                }
-// Exécution, une première fois de la requête, avec nos valeurs
-                if (!$resultats->execute(array($_POST['pseudo'], hash('sha256', $_POST['pass'])))) {
-                    list($pdoCode, $internalCode, $msg) = $insert->errorInfo();
-                    die(sprintf("L'exécution de la requête a échoué : %d/%d, %s", $pdoCode, $internalCode, $msg));
-                }
-                $donnees = $resultats->fetch();
-                if ($resultats->rowCount() == 1) {
+                include 'includes/SQL.php';
+                $connection = openSQLConnexion();
+                $donneesSQL = select($connection, "SELECT id, LINEUP_id FROM member AS m LEFT JOIN member_lineup ON ( m.id = MEMBER_id ) WHERE nick=? AND password=?", array($_POST['pseudo'], hash('sha256', $_POST['pass'])));
+                closeSQLConnexion($connection);
+                if (count($donneesSQL) == 1) {
+                    $donnees = $donneesSQL[0];
+                    $donneesSQL = null;
                     $_SESSION['pseudo'] = $_POST['pseudo'];
                     $_SESSION['id'] = $donnees['id'];
                     if (!empty($donnees['LINEUP_id'])) {
@@ -42,7 +31,6 @@ switch ($_POST['action']) {
                 } else {
                     $message = "mauvais pseudo ou pass!";
                 }
-                $resultats->closeCursor(); // on ferme le curseur des résultats
             }
         }
         break;
@@ -67,15 +55,15 @@ switch ($_POST['action']) {
             $steamFriend = $_POST['steamFriend'];
             include('rfc822.php');
             if (is_valid_email_address($_POST['email'])) {
-                $DBC = mysql_connect("localhost", "root", "");
-                mysql_select_db("creative");
-                $q = "INSERT INTO member (timestamp1, firstName, lastName, birthday, gender, country, department, town, email, steamFriend, nick, password) VALUES (NOW(), '$firstName', '$lastName', '$birthday', '$gender', '$country', '$department', '$town', '$email', '$steamFriend', '$pseudo', '$password')";
-                if (mysql_query($q)) {
+                include 'includes/SQL.php';
+                $connection = openSQLConnexion();
+                $queryOK = insertUpdate($connection, "INSERT INTO member (timestamp1, firstName, lastName, birthday, gender, country, department, town, email, steamFriend, nick, password) VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", array(array($firstName, $lastName, $birthday, $gender, $country, $department, $town, $email, $steamFriend, $pseudo, $password)));
+                closeSQLConnexion($connection);
+                if ($queryOK) {
                     $message = "Vous êtes bien enregistré.";
                 } else {
                     $message = "Une erreur s'est produite.";
                 }
-                mysql_close($DBC);
             } else {
                 $message = "Email incorrect.";
             }
@@ -89,15 +77,15 @@ switch ($_POST['action']) {
                 $memberID = $_SESSION['id'];
                 $object = $_POST['object'];
                 $message = $_POST['message'];
-                $DBC = mysql_connect("localhost", "root", "");
-                mysql_select_db("creative");
-                $q = "INSERT INTO contact (object, message, timestamp1, MEMBER_id) VALUES ('$object', '$message', NOW(), $memberID)";
-                if (mysql_query($q)) {
+                include 'includes/SQL.php';
+                $connection = openSQLConnexion();
+                $queryOK = insertUpdate($connection, "INSERT INTO contact (object, message, timestamp1, MEMBER_id) VALUES (?, ?, NOW(), ?)", array(array($object, $message, $memberID)));
+                closeSQLConnexion($connection);
+                if ($queryOK) {
                     $message = "Votre message à été envoyé.";
                 } else {
                     $message = "Une erreur s'est produite.";
                 }
-                mysql_close($DBC);
             } else {
                 $message = "Le ou les champs suivant n'ont pas été remplies : objet et message.";
             }
@@ -107,36 +95,23 @@ switch ($_POST['action']) {
         break;
     case 'recruit':
         if (isset($_SESSION['pseudo'])) {
+            include 'includes/SQL.php';
+            $connection = openSQLConnexion();
             if (isset($_POST['steamFriend'])) {
-                $DBC = mysql_connect("localhost", "root", "");
-                mysql_select_db("creative");
-                mysql_query("UPDATE member SET steamFriend=" . $_POST['steamFriend'] . " WHERE id=" . $_SESSION['id']);
-                mysql_close($DBC);
+                $queryOK = insertUpdate($connection, "UPDATE member SET steamFriend=? WHERE id=?", array(array($_POST['steamFriend'], $_SESSION['id'])));
             }
             if (isset($_POST['birthday'])) {
                 $birthday = $_POST['birthyear'] . '-' . $_POST['birthmonth'] . '-' . $_POST['birthday'];
-                $DBC = mysql_connect("localhost", "root", "");
-                mysql_select_db("creative");
-                mysql_query("UPDATE member SET birthday=" . $birthday . " WHERE id=" . $_SESSION['id']);
-                mysql_close($DBC);
+                $queryOK = insertUpdate($connection, "UPDATE member SET birthday=? WHERE id=?", array(array($birthday, $_SESSION['id'])));
             }
             if (isset($_POST['country'])) {
-                $DBC = mysql_connect("localhost", "root", "");
-                mysql_select_db("creative");
-                mysql_query("UPDATE member SET country=" . $_POST['country'] . " WHERE id=" . $_SESSION['id']);
-                mysql_close($DBC);
+                $queryOK = insertUpdate($connection, "UPDATE member SET country=? WHERE id=?", array(array($_POST['country'], $_SESSION['id'])));
             }
             if (isset($_POST['department'])) {
-                $DBC = mysql_connect("localhost", "root", "");
-                mysql_select_db("creative");
-                mysql_query("UPDATE member SET department=" . $_POST['department'] . " WHERE id=" . $_SESSION['id']);
-                mysql_close($DBC);
+                $queryOK = insertUpdate($connection, "UPDATE member SET department=? WHERE id=?", array(array($_POST['department'], $_SESSION['id'])));
             }
             if (isset($_POST['town'])) {
-                $DBC = mysql_connect("localhost", "root", "");
-                mysql_select_db("creative");
-                mysql_query("UPDATE member SET town=" . $_POST['town'] . " WHERE id=" . $_SESSION['id']);
-                mysql_close($DBC);
+                $queryOK = insertUpdate($connection, "UPDATE member SET town=? WHERE id=?", array(array($_POST['town'], $_SESSION['id'])));
             }
 
             if (!empty($_POST['game']) AND !empty($_POST['steamID']) AND !empty($_POST['nick']) AND !empty($_POST['xp']) AND !empty($_POST['level']) AND !empty($_POST['microphone']) AND !empty($_POST['TS3']) AND !empty($_POST['WIRE'])) {
@@ -164,22 +139,19 @@ switch ($_POST['action']) {
                 $friday = substr($availability[4], 1);
                 $saturday = substr($availability[5], 1);
                 $sunday = substr($availability[6], 1);
-                $DBC = mysql_connect("localhost", "root", "");
-                mysql_select_db("creative");
-                if (mysql_query("INSERT INTO recruitment (timestamp1, microphone, TS3, WIRE, knowUs, other, MEMBER_id, GAME_id) VALUES (NOW(), $microphone, $TS3, $WIRE, $knowUs, '$other', $MEMBER_id, $GAME_id)")) {
-                    if (mysql_query("INSERT INTO cs (experience, level, weaponTP, weaponTA, weaponCTP, weaponCTA, nick, steamId, GAME_id, MEMBER_id) VALUES ($experience, $level, $weaponTP, $weaponTA, $weaponCTP, $weaponCTA, '$nick', '$steamId', $GAME_id, $MEMBER_id)")) {
-                        $a = "INSERT INTO availability (MEMBER_id, monday, tuesday, wednesday, thursday, friday, saturday, sunday) VALUES ($MEMBER_id, '$monday', '$tuesday', '$wednesday', '$thursday', '$friday', '$saturday', '$sunday')";
-                        if (mysql_query($a)) {
-                            $message = "Vous êtes bien enregistré.";
-                        }
-                    }
+
+                $queryOK1 = insertUpdate($connection, "INSERT INTO recruitment (timestamp1, microphone, TS3, WIRE, knowUs, other, MEMBER_id, GAME_id) VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?)", array(array($microphone, $TS3, $WIRE, $knowUs, $other, $MEMBER_id, $GAME_id)));
+                $queryOK2 = insertUpdate($connection, "INSERT INTO cs (experience, level, weaponTP, weaponTA, weaponCTP, weaponCTA, nick, steamId, GAME_id, MEMBER_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", array(array($experience, $level, $weaponTP, $weaponTA, $weaponCTP, $weaponCTA, $nick, $steamId, $GAME_id, $MEMBER_id)));
+                $queryOK3 = insertUpdate($connection, "INSERT INTO availability (MEMBER_id, monday, tuesday, wednesday, thursday, friday, saturday, sunday) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", array(array($MEMBER_id, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday)));
+                if ($queryOK1 && $queryOK2 && $queryOK3) {
+                    $message = "Vous êtes bien enregistré.";
                 } else {
                     $message = "Une erreur s'est produite.";
                 }
-                mysql_close($DBC);
             } else {
-                $message = "Le ou les champs suivant n'ont pas été remplies : objet et message.";
+                $message = "Le ou les champs suivant n'ont pas été remplies : jeu, steam ID, pseudo, expérience, level, microphone, TS3, WIRE.";
             }
+            closeSQLConnexion($connection);
         } else {
             $message = "Vous devez être inscrit pour pouvoir postuler.";
         }
@@ -191,27 +163,28 @@ switch ($_POST['action']) {
         $return = $_POST['returnYear'] . '-' . $_POST['returnMonth'] . '-' . $_POST['returnDay'] . ' ' . $_POST['returnHour'] . ':' . $_POST['returnMinute'] . ':00';
         $message = $_POST['message'];
         $id = $_SESSION['id'];
-        $DBC = mysql_connect("localhost", "root", "");
-        mysql_select_db("creative");
-        if (mysql_query("INSERT INTO away (departure, `return`, message, MEMBER_id) VALUES ('$departure', '$return', '$message', $id)")) {
+        include 'includes/SQL.php';
+        $connection = openSQLConnexion();
+        $queryOK = insertUpdate($connection, "INSERT INTO away (departure, comeback, message, MEMBER_id) VALUES (?, ?, ?, ?)", array(array($departure, $return, $message, $id)));
+        closeSQLConnexion($connection);
+        if ($queryOK) {
             $message = "Votre absence est bien enregistré.";
         } else {
             $message = "Votre absence n'est pas enregistré.Une erreur s'est produite.";
         }
-        mysql_close($DBC);
         break;
     case 'deleteAway':
         $id = $_POST['id'];
         $mid = $_SESSION['id'];
-        $DBC = mysql_connect("localhost", "root", "");
-        mysql_select_db("creative");
-        mysql_query("DELETE FROM away WHERE id='".$id."' AND MEMBER_id='".$mid."'");
-        if (mysql_affected_rows() == 1) {
-            $message = "Votre absence est bien effacée.";
+        include 'includes/SQL.php';
+        $connection = openSQLConnexion();
+        $queryOK = insertUpdate($connection, "DELETE FROM away WHERE id=? AND MEMBER_id=?", array(array($id, $mid),array($id, $mid)), true);
+        closeSQLConnexion($connection);
+        if ($queryOK[0] == 1) {
+            $message = "Votre absence est effacée.";
         } else {
             $message = "Votre absence n'est pas effacée.Une erreur s'est produite.";
         }
-        mysql_close($DBC);
         break;
     case 'modifyAccount':
         $nick = $_POST['nick'];
@@ -232,17 +205,12 @@ switch ($_POST['action']) {
         $friday = substr($availability[4], 1);
         $saturday = substr($availability[5], 1);
         $sunday = substr($availability[6], 1);
-        $DBC = mysql_connect("localhost", "root", "");
-        mysql_select_db("creative");
-        $a = "UPDATE availability SET monday='$monday', tuesday='$tuesday', wednesday='$wednesday', thursday='$thursday', friday='$friday', saturday='$saturday', sunday='$sunday' WHERE MEMBER_id=" . $_SESSION['id'];
-        echo $a;
-        mysql_query($a) or die('Requête invalide : ' . mysql_error());
-        mysql_query("UPDATE member SET nick=$nick, lastName=$lastName, firstName=$firstName, birthday=$birthday, gender=$gender, country=$country, department=$department, town=$town, email=$email, steamFriends=$steamFriends WHERE id=" . $_SESSION['id']);
-        mysql_close($DBC);
+        include 'includes/SQL.php';
+        $connection = openSQLConnexion();
+        $queryOK = insertUpdate($connection, "UPDATE availability SET monday=?, tuesday=?, wednesday=?, thursday=?, friday=?, saturday=?, sunday=? WHERE MEMBER_id=?", array(array($monday, $tuesday, $wednesday, $thursday, $friday, $saturday, $sunday, $_SESSION['id'])));
+        $queryOK = insertUpdate($connection, "UPDATE member SET nick=?, lastName=?, firstName=?, birthday=?, gender=?, country=?, department=?, town=?, email=?, steamFriends=? WHERE id=?", array(array($nick, $lastName, $firstName, $birthday, $gender, $country, $department, $town, $email, $steamFriends, $_SESSION['id'])));
+        closeSQLConnexion($connection);
         break;
 }
-
-
-
 echo "<div>$message</div>";
 ?>

@@ -9,23 +9,25 @@ $idMember = $_SESSION['id'];
 
 include 'includes/SQL.php';
 $connection = openSQLConnexion();
-$donneesSQL = select($connection,"SELECT firstName, lastName, gender, country, department, town, email, steamFriend, nick, DATE_FORMAT(birthday,'%d') AS birthday, DATE_FORMAT(birthday,'%m') AS birthmonth, DATE_FORMAT(birthday,'%Y') AS birthyear, monday, tuesday, wednesday, thursday, friday, saturday, sunday FROM member AS m LEFT JOIN availability AS a ON ( MEMBER_id = m.id ) WHERE m.id=?",array(array($idMember)));
+$donneesSQL = select($connection,"SELECT firstName, lastName, gender, country, department, town, email, steamFriend, nick, DATE_FORMAT(birthday,'%d') AS birthday, DATE_FORMAT(birthday,'%m') AS birthmonth, DATE_FORMAT(birthday,'%Y') AS birthyear, monday, tuesday, wednesday, thursday, friday, saturday, sunday FROM member AS m LEFT JOIN availability AS a ON ( MEMBER_id = m.id ) WHERE m.id=?",array($idMember));
 closeSQLConnexion($connection);
+$donnees=$donneesSQL[0];
+$donneesSQL=null;
 
-$availability = '0'.$donneesSQL[0]['monday'].'0'.$donneesSQL[0]['tuesday'].'0'.$donneesSQL[0]['wednesday'].'0'.$donneesSQL[0]['thursday'].'0'.$donneesSQL[0]['friday'].'0'.$donneesSQL[0]['saturday'].'0'.$donneesSQL[0]['sunday'];
+$availability = '0'.$donnees['monday'].'0'.$donnees['tuesday'].'0'.$donnees['wednesday'].'0'.$donnees['thursday'].'0'.$donnees['friday'].'0'.$donnees['saturday'].'0'.$donnees['sunday'];
 
-$nick = $donneesSQL[0]['nick'];
-$birthday = $donneesSQL[0]['birthday'];
-$birthmonth = $donneesSQL[0]['birthmonth'];
-$birthyear = $donneesSQL[0]['birthyear'];
-$firstName = $donneesSQL[0]['firstName'];
-$lastName = $donneesSQL[0]['lastName'];
-$gender = $donneesSQL[0]['gender'];
-$country = $donneesSQL[0]['country'];
-$department = $donneesSQL[0]['department'];
-$town = $donneesSQL[0]['town'];
-$email = $donneesSQL[0]['email'];
-$steamFriend = $donneesSQL[0]['steamFriend'];
+$nick = $donnees['nick'];
+$birthday = $donnees['birthday'];
+$birthmonth = $donnees['birthmonth'];
+$birthyear = $donnees['birthyear'];
+$firstName = $donnees['firstName'];
+$lastName = $donnees['lastName'];
+$gender = $donnees['gender'];
+$country = $donnees['country'];
+$department = $donnees['department'];
+$town = $donnees['town'];
+$email = $donnees['email'];
+$steamFriend = $donnees['steamFriend'];
 ?>
 
 <div id="account">
