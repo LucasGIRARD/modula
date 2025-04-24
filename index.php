@@ -1,67 +1,26 @@
 <?php
+$time_start = microtime(true);
+include_once 'dev.php';
+
+ini_set('arg_separator.output', '&amp;');
+
 session_start();
-if (isset($_GET['page'])) {
-    
-    $pages = array("news", "fullNews", "members", "member", "recruit", "recruitForm", "memberscs", "servers", "matchs", "match", "contact", "register", "connect", "work", "away", "awayForm", "account");
-    if (in_array($_GET['page'], $pages, true)){
-       $page = $_GET['page']; 
-    }
-    else {        
-        $page = "news";
-    }
-} else {
-    $page = "news";
-}
+include_once 'include/SQL.php';
+$connection = openSQLConnexion();
+
+$donneesSQL = select($connection, "SELECT c.open, c.title, c.headingTitle, c.footerCopyright, THEME_id AS theme, PAGE_id_home, PAGE_id_maintenance, PAGE_id_403, PAGE_id_404, PAGE_id_close FROM configuration AS c ORDER BY c.id LIMIT 1");
+
+list($site['open'], $site['title'], $site['headingTitle'], $site['footerCopyright'], $site['theme'], $site['home'], $site['maintenance'], $site['403'], $site['404'], $site['close']) = $donneesSQL[0];
+
+$donneesSQL = NULL;
+
+include_once 'modules/pages/core.php';
+
+//include_once 'theme/' . $site['theme'] . '/index.php';
+include_once 'modules/themes/views/' . $site['theme'] . '.php';
+
+closeSQLConnexion($connection);
+$time_end = microtime(true);
+$time = $time_end - $time_start;
+echo "affichage en $time secondes";
 ?>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8" />
-        <link rel="stylesheet" href="styles/style.css" />
-        <title>CV - informaticien - analyste-développeur - Lucas Girard</title>
-    </head>
-    <body>
-        <div id="body">
-            <header>
-                <img src="images/banniere.png" alt="bannière" />
-            </header>
-            <nav id="menu">
-                <ul>
-                    <li><a href="?page=news">News</a></li>
-                    <?php
-                    if (!isset($_SESSION['LU'])) {
-                        echo "<li><a href='?page=recruit'>Recrutement</a></li>";
-                    }
-                    ?>
-                    <li><a href="?page=members">Membres</a></li>
-                    <li><a href="?page=servers">Serveurs</a></li>
-                    <li><a href="?page=matchs">Matches</a></li>
-                    <li><a href="?page=contact">Contact</a></li>
-                                                            <?php
-                    if (isset($_SESSION['LU'])) {
-                        echo "<li><a href='?page=away'>Absence</a></li>";
-                    }
-                    ?>
-                    <?php
-                    if (!isset($_SESSION['pseudo'])) {
-                        echo "<li><a href='?page=register'>Inscription</a></li><li id='last'><form action='?page=connect' method='post'>
-    <input type='hidden' name='page' value='" . $page . "' />
-    <input type='submit' id='unconnectButton' value='Connexion' />
-</form></li>";
-                    } else {
-                        echo "<li><a href='?page=account'>Compte</a></li><li id='last'><form action='?page=work' method='post'>
-    <input type='hidden' name='action' value='unconnect' />
-    <input type='hidden' name='page' value='" . $page . "' />
-    <input type='submit' id='unconnectButton' value='Déconnexion' />
-</form></li>";
-                    }
-                    ?>
-                </ul>
-            </nav>
-            <div id="content"><?php include 'includes/' . $page . '.php'; ?></div>
-            <footer>
-                <p>copyright</p>
-            </footer>
-        </div>
-    </body>
-</html>

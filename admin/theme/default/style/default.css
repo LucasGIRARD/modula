@@ -1,0 +1,10 @@
+/************************************************** GENERAL CLASS **************************************************/
+.inline {
+    display: inline-block;
+}
+
+/************************************************** END GENERAL CLASS **************************************************/
+
+.resumeWE, .resumeEducation, .resumeSkills, .resumeActivities {    
+    text-align: right;    
+}
