@@ -1,40 +1,39 @@
 <?php
-if (isset($_GET['page'])) {
-    $page = $_GET['page'];
-} else {
-    $page = "home";
-}
+include_once '../dev.php';
+
+ini_set('arg_separator.output', '&amp;');
+//session_cache_limiter('private_no_expire');
+//session_cache_limiter('private_no_expire, must-revalidate');
+session_start();
+include_once '../include/SQL.php';
+$connection = openSQLConnexion();
+
+$donneesSQL = select($connection,"SELECT c.open, c.title, c.headingTitle, c.footerCopyright, THEME_id AS theme,t.name AS themeName FROM configuration AS c LEFT JOIN theme AS t ON c.THEME_id = t.id ORDER BY c.id LIMIT 1");
+
+$configuration['title'] = $donneesSQL[0]['title'];
+$configuration['open'] = $donneesSQL[0]['open'];
+$configuration['headingTitle'] = $donneesSQL[0]['headingTitle'];
+$configuration['footerCopyright'] = $donneesSQL[0]['footerCopyright'];
+$configuration['theme'] = $donneesSQL[0]['theme'];
+$configuration['themeName'] = $donneesSQL[0]['themeName'];
+
+$donneesSQL = NULL;
+
+include_once 'modules/pages/core.php';
+
+include_once 'modules/menus/core.php';
+/*
+unset($donneesSQL);
+unset($moduleAction);
+unset($value);
+unset($action);
+unset($pagesCore);
+unset($modulesCore);
+unset($errorPage);
+unset($defaultPage);
+*/
+
+include_once 'theme/'.$configuration['themeName'].'/index.php';
+
+closeSQLConnexion($connection);
 ?>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8" />
-        <link rel="stylesheet" href="styles/style.css" />
-        <title>Tigers Gamerz</title>
-    </head>
-    <body>
-        <div id="menu">
-            <header>
-                <img src="images/logo.png" alt="logo" />
-            </header>
-            <nav>
-                <ul>
-                    <li><a href="?page=home">Accueil</a></li>
-                    <li><a href="?page=configuration">Configuration</a></li>
-                    <li><a href="?page=news">News</a></li>
-                    <li><a href="?page=recruit">Recrutement</a></li>
-                    <li><a href="?page=members">Membre</a></li>
-                    <li><a href="?page=servers">Serveur</a></li>
-                    <li><a href="?page=match">Match</a></li>
-                    <li><a href="?page=contact">Contact</a></li>
-                </ul>
-            </nav>
-        </div>
-        <div id="body">
-            <div id="content"><?php include('includes/' . $page . '.php'); ?></div>
-        </div>
-        <footer>
-            <p>copyright</p>
-        </footer>
-    </body>
-</html>

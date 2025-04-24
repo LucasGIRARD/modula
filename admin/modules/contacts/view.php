@@ -1,0 +1,51 @@
+<h1>Formulaires de contact</h1>
+<a href='?module=contacts&action=add'>Ajouter</a>
+<?php
+if (isset($contactforms)) {
+    ?>
+    <table>
+        <tr>
+            <th>Titre</th>            
+            <th>Status</th>
+            <th>Activer / Désactiver</th>
+            <th>Modifier</th>
+            <th>Supprimer</th>
+        </tr>
+        <?php        
+        foreach ($contactforms as $id => $value) {
+
+
+            echo '<tr>
+        <td>' . $value['name'] . '</td>';
+
+            if ($value['enabled'] == TRUE) {
+                echo '<td>Activer</td>
+            <td><form action="index.php?module=contacts&action=disable" method="POST">
+    <input type="hidden" name="id" value="' . $id . '" />
+    <input type="submit" value="Désactiver" />
+</form></td>';
+            } else {
+                echo '<td>Désactiver</td>
+            <td><form action="index.php?module=contacts&action=enable" method="POST">
+    <input type="hidden" name="id" value="' . $id . '" />
+    <input type="submit" value="Activer" />
+</form></td>';
+            }
+
+            echo '<td><form action="index.php?module=contacts&action=modify" method="POST">
+    <input type="hidden" name="id" value="' . $id . '" />
+    <input type="submit" value="Modifier" />
+</form></td>
+              <td><form action="index.php?module=contacts&action=delete" method="POST">
+    <input type="hidden" name="id" value="' . $id . '" />
+    <input type="submit" value="Supprimer" />
+</form></td>
+              </tr>';
+        }
+        ?>
+    </table>
+    <?php
+} else {
+    echo 'Aucun formulaire créé.';
+}
+?>
