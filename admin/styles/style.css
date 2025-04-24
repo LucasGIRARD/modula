@@ -1,0 +1,23 @@
+#menu, #body {
+    display: inline-block;
+    height:100%;
+    vertical-align: top;
+}
+
+#menu {
+    margin-top: 150px;
+}
+
+#body {
+    width:87%;    
+}
+
+ul {    
+    list-style-type: none;
+    padding:0px;
+}
+
+textarea {
+    width:99%;
+    height:200px;
+}
